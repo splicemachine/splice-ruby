@@ -1,0 +1,9 @@
+.collapse {
+    background: #FFF7E5 !important;
+}
+
+
+pre.prettyprint {
+    overflow-x: scroll !important;
+    width: 620px;
+}

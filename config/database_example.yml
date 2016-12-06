@@ -1,0 +1,21 @@
+default: &default
+  adapter: jdbcsplice
+  username: splice
+  password: admin
+  prepared_statements: true
+  pool: 1000
+  host: localhost
+  port: 1527
+
+development:
+  <<: *default
+  database: splicedb
+
+test:
+  <<: *default
+  database: splicedb
+
+
+production:
+  <<: *default
+  database: splicedb

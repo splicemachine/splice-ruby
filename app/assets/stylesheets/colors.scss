@@ -1,0 +1,27 @@
+.background {
+
+  &.-light_gray {
+    background-color: #edecea;
+  }
+  &.-gray {
+    background-color: #565044;
+  }
+
+  &.-green {
+    background-color: #ccd348;
+  }
+}
+
+.text {
+  &.-gray {
+    color: #565044;
+  }
+
+  &.-white {
+    color: #fff;
+  }
+
+  &.-black {
+    color: #000;
+  }
+}

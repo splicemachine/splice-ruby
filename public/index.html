@@ -1,0 +1,2302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="description" content="">
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Splice - Ruby on Rails</title>
+<link rel="alternate" type="application/rss+xml" title="frittt.com" href="feed/index.html">
+<link href="http://fonts.googleapis.com/css?family=Raleway:700,300" rel="stylesheet"
+        type="text/css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/prettify.css">
+<link rel="stylesheet" href="css/bootstrap-table.css">
+<link rel="stylesheet" href="css/bootstrap-overrides.css">
+
+</head>
+<body>
+<div class="wrapper">
+<header>
+  <div class="container">
+    <h2 class="lone-header">Splice - Ruby on Rails</h2>
+  </div>
+</header>
+<section>
+  <div class="container">
+    <ul class="docs-nav">
+      <li><strong>Home</strong></li>
+      <li><a href="#overview" class="cc-active">Overview</a></li>
+      <li><a href="#issues" class="cc-active">Issues</a></li>
+      <li><a href="#splice_notes" class="cc-active">Splice Notes</a></li>
+      <li><a href="#log_levels" class="cc-active">Log Levels</a></li>
+      <li><a href="#gems" class="cc-active">Splice gems</a></li>
+      <li class="separator"></li>
+      <li><strong>Performance</strong></li>
+      <li><a href="#real_world_performance" class="cc-active">Real World Performance</a></li>
+      <li><a href="#performance" class="cc-active">Overview</a></li>
+    </ul>
+
+
+    <div class="docs-content">
+
+      <h2> Slice</h2>
+      <h3 id="overview">Overview</h3>
+      <p> For tests are used JRuby 9.1.5.0, Rails 4.2.5.1, and Ruby 2.3.1 (for MySQL)</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th> MySQL <br/><small>Ruby 2.3.1</small> </th>
+              <th> Derby <br/><small>JRuby 9.1.5.0</small> </th>
+              <th> Splice 2 & 3<br/><small>JRuby 9.1.5.0</small> </th>
+            </tr>
+          </thead>
+          <tbody>
+<!--             <tr>
+              <th class="text-nowrap" scope="row">Grid behavior</th>
+              <td>Horizontal at all times</td>
+              <td colspan="3">Collapsed to start, horizontal above breakpoints</td>
+            </tr> -->
+            <tr>
+              <th class="text-nowrap" scope="row">Create</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Update</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Read Only Update</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Destroy</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Create With</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#create_with_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="create_with_splice">
+              <!-- <th class="text-nowrap" scope="row">Stacktrace:</th> -->
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+               <pre class="prettyprint">
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  companies.* FROM companies WHERE companies.name = ? LIMIT 1
+Shared Example Group: "model create_with" called from ./spec/models/company_spec.rb:17
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:33:in `block in (root)'
+# ./spec/support/shared_examples/model.rb:33:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+</pre>
+
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Validations</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Has Many Association</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Add</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#has_many_association_add_derby">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#has_many_association_add_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_many_association_add_splice">
+              <td colspan="5">
+                 <b>Note:</b> <a href="#issues">ID issue</a>
+                 <pre class="prettyprint">
+ Failure/Error: expect(item.send(model_association).count).to eq 1
+
+       expected: 1
+            got: 0
+
+       (compared using ==)
+     Shared Example Group: "has_many association" called from ./spec/models/company_spec.rb:25
+     # ./spec/support/shared_examples/model.rb:113:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+
+
+                 </pre>
+
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_many_association_add_derby">
+              <!-- <th class="text-nowrap" scope="row">Stacktrace:</th> -->
+              <td colspan="5">
+
+                 <pre class="prettyprint">
+Failure/Error: expect(item.send(model_association).count).to eq 1
+
+       expected: 1
+            got: 0
+
+       (compared using ==)
+     Shared Example Group: "has_many association" called from ./spec/models/company_spec.rb:25
+     # ./spec/support/shared_examples/model.rb:113:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+
+                 </pre>
+
+              </td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Delete</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#has_many_association_delete_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_many_association_delete_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                 <pre class="prettyprint">
+Failure/Error: item.send(model_association).delete(item_associated)
+
+     ActiveRecord::StatementInvalid:
+       ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  profiles.* FROM profiles WHERE profiles.user_id = ? LIMIT 1
+     Shared Example Group: "has_many association" called from ./spec/models/company_spec.rb:25
+     # arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+     # ./spec/support/shared_examples/model.rb:119:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+     # ------------------
+     # --- Caused by: ---
+     # ActiveRecord::JDBCError:
+     #   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+     #   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+                 </pre>
+              </td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Destroy</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#has_many_association_destroy_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_many_association_destroy_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                 <pre class="prettyprint">
+Failure/Error: item.destroy
+
+     ActiveRecord::StatementInvalid:
+       ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  profiles.* FROM profiles WHERE profiles.user_id = ? LIMIT 1
+     Shared Example Group: "has_many association" called from ./spec/models/company_spec.rb:25
+     # arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+     # ./spec/support/shared_examples/model.rb:130:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+     # ------------------
+     # --- Caused by: ---
+     # ActiveRecord::JDBCError:
+     #   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+     #   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+
+                 </pre>
+              </td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Has One Association</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Add</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#has_one_association_derby">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#has_one_association_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_one_association_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: item.send("#{model_association}=", item_associated)
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  profiles.* FROM profiles WHERE profiles.user_id = ? LIMIT 1
+Shared Example Group: "has_one association" called from ./spec/models/user_spec.rb:20
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:82:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_one_association_derby">
+              <td colspan="5">
+                <b>Note:</b> <a href="#limit_issue_derby">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.where(id: item.id)[0].send(model_association)).to eq item_associated
+
+expected: < Profile id: 223, user_id: 409, profile_name: "userProfile-28", views: 0, created_at: "2016-10-31 12:33:23", updated_at: "2016-10-31 12:33:23">
+    got: nil
+
+(compared using ==)
+Shared Example Group: "has_one association" called from ./spec/models/user_spec.rb:20
+# ./spec/support/shared_examples/model.rb:88:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+
+                </pre>
+              </td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Belongs To Association</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Add</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#belongs_to_association_derby">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#belongs_to_association_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="belongs_to_association_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.where(id: item.id)[0].send(model_association)).to eq item_associated
+
+ActiveRecord::StatementInvalid:
+  ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.: SELECT  companies.* FROM companies WHERE companies.id = ? LIMIT 1
+Shared Example Group: "belongs_to association" called from ./spec/models/user_spec.rb:21
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:63:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+                </pre>
+              </td>
+            </tr>
+
+
+
+            <tr class="collapse" id="belongs_to_association_derby">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.where(id: item.id)[0].send(model_association)).to eq item_associated
+
+expected: #< Company id: 1062, name: "company-69", created_at: "2016-10-31 12:33:23", updated_at: "2016-10-31 12:33:23", description: "''">
+    got: #< Company id: 1061, name: "company-68", created_at: "2016-10-31 12:33:23", updated_at: "2016-10-31 12:33:23", description: "">
+
+(compared using ==)
+
+Diff:
+
+@@ -1,7 +1,7 @@
+-#< Company:0x4893a9f0
+- id: 1062,
+- name: "company-69",
++#< Company:0xae54cb3
++ id: 1061,
++ name: "company-68",
+ created_at: Mon, 31 Oct 2016 12:33:23 UTC +00:00,
+ updated_at: Mon, 31 Oct 2016 12:33:23 UTC +00:00,
+- description: "''">
++ description: "">
+
+Shared Example Group: "belongs_to association" called from ./spec/models/user_spec.rb:21
+# ./spec/support/shared_examples/model.rb:63:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+
+
+                </pre>
+              </td>
+            </tr>
+
+
+
+
+
+            <tr class="collapse" id="has_one_association">
+              <!-- <th class="text-nowrap" scope="row">Stacktrace:</th> -->
+              <td colspan="5">AAAA</td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Polumorfic Association</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Add</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#polumorfic_association_add_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="polumorfic_association_add_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                <pre class="prettyprint">
+  Failure/Error: item.send "#{model_association}=", item_associated
+
+     ActiveRecord::StatementInvalid:
+       ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 106.: SELECT  addresses.* FROM addresses WHERE addresses.addressable_id = ? AND addresses.addressable_type = ? LIMIT 1
+     Shared Example Group: "polymorphic association" called from ./spec/models/company_spec.rb:26
+     # arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+     # ./spec/support/shared_examples/model.rb:198:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+     # ------------------
+     # --- Caused by: ---
+     # ActiveRecord::JDBCError:
+     #   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 106.
+     #   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Has Many Through</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Add</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Delete</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#has_many_through_association_delete_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_many_through_association_delete_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                <pre class="prettyprint">
+  Failure/Error: item.send(model_through_association_pl).send(:destroy_all)
+
+     ActiveRecord::StatementInvalid:
+       ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  profiles.* FROM profiles WHERE profiles.user_id = ? LIMIT 1
+     Shared Example Group: "has_many through association" called from ./spec/models/company_spec.rb:27
+     # arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+     # ./spec/support/shared_examples/model.rb:185:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+     # ------------------
+     # --- Caused by: ---
+     # ActiveRecord::JDBCError:
+     #   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+     #   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Has Many And Belongs To</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Add</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Create</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#has_many_and_belongs_to_splice_derby">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#has_many_and_belongs_to_splice_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="has_many_and_belongs_to_splice_splice">
+              <td colspan="5">
+                <b>Note:</b>
+                <br/>
+                Issues:<br/>
+                  1. Limit issue<br/>
+                  2. Intermediate table tag_users is not automatically populated with relevant fields by Rails
+                <pre class="prettyprint">
+Failure/Error: item.send(model_association).send(:create, item_associated.attributes.except('id', 'created_at', 'updated_at'))
+
+ActiveRecord::StatementInvalid:
+  ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.: SELECT  companies.* FROM companies WHERE companies.id = ? LIMIT 1
+Shared Example Group: "habtm association" called from ./spec/models/tag_spec.rb:13
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:152:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+                </pre>
+              </td>
+            </tr>
+
+
+            <tr class="collapse" id="has_many_and_belongs_to_splice_derby">
+              <td colspan="5">
+                <b>Note:</b>
+                <br/>
+                Issues:<br/>
+                  1. Intermediate table tag_users is not automatically populated with relevant fields by Rails
+                <pre class="prettyprint">
+Failure/Error: expect(item.send(model_association).count).to eq 1
+
+expected: 1
+    got: 0
+
+(compared using ==)
+Shared Example Group: "habtm association" called from ./spec/models/profile_spec.rb:5
+# ./spec/support/shared_examples/model.rb:153:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+                </pre>
+              </td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Delete</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">All</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">All after update</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#all_after_update">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#all_after_update">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="all_after_update">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">ID issue</a>
+                <br/>
+                 Selecting all the records works as expected, without any modification.
+                 When record is updated, the record itself contains the updated values, but when selecting all records from database, it returns values which are the same as before the update for the updated record.
+
+                <pre class="prettyprint">
+Failure/Error: expect(model.where(id: item_2.id)[0].send(field)).to eq item_2.send(field)
+
+   expected: "New Company"
+        got: "company-27"
+
+   (compared using ==)
+ Shared Example Group: "selector all with update" called from ./spec/models/company_spec.rb:39
+ # ./spec/support/shared_examples/model.rb:282:in `block in (root)'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+ # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Order</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Reverse Order</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Limit</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#limit_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="limit_splice">
+              <td colspan="5">
+                <pre class="prettyprint">
+    Failure/Error: expect(result).to eq return_result
+
+     ActiveRecord::StatementInvalid:
+       ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "1" at line 1, column 42.: SELECT  companies.* FROM companies LIMIT 1
+     Shared Example Group: "selector" called from ./spec/models/company_spec.rb:34
+     # arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+     # ./spec/support/shared_examples/model.rb:270:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+     # ------------------
+     # --- Caused by: ---
+     # ActiveRecord::JDBCError:
+     #   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "1" at line 1, column 42.
+     #   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Select</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Group</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Offset</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#offset_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="offset_splice">
+              <td colspan="5">
+                <pre class="prettyprint">
+    Failure/Error: expect(result).to eq return_result
+
+     ActiveRecord::StatementInvalid:
+       ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "1" at line 1, column 42.: SELECT companies.* FROM companies OFFSET 1
+     Shared Example Group: "selector" called from ./spec/models/company_spec.rb:37
+     # arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+     # ./spec/support/shared_examples/model.rb:270:in `block in (root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+     # /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+     # ------------------
+     # --- Caused by: ---
+     # ActiveRecord::JDBCError:
+     #   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "1" at line 1, column 42.
+     #   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Find</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#find_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="find_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.send(:find, item_2.id)).to eq item_2
+
+ActiveRecord::StatementInvalid:
+  ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.: SELECT  companies.* FROM companies WHERE companies.id = ? LIMIT 1
+Shared Example Group: "find selector" called from ./spec/models/company_spec.rb:41
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:294:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Find By</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+                            <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#find_by_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="find_by_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                <pre class="prettyprint">
+Failure/Error: expect(model.find_by(field => value1)).to eq(item1)
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  companies.* FROM companies WHERE companies.name = ? LIMIT 1
+Shared Example Group: "find_by selector" called from ./spec/models/company_spec.rb:55
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:441:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Find Array</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Find in Batches</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#find_in_batches_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="find_in_batches_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                <pre class="prettyprint">
+Failure/Error: model.send(:find_in_batches) do |batch|
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 63.: SELECT  companies.* FROM companies  ORDER BY companies.id ASC LIMIT 1000
+Shared Example Group: "find selector" called from ./spec/models/company_spec.rb:41
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:306:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 63.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Join</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Include</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#include_splice_derby">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#include_splice_derby">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="include_splice_derby">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+
+                <pre class="prettyprint">
+Failure/Error: expect(item_object.send(model_association).count).to eq 1
+
+expected: 1
+got: 0
+
+(compared using ==)
+Shared Example Group: "join and include query" called from ./spec/models/company_spec.rb:43
+# ./spec/support/shared_examples/model.rb:223:in `block in (root)'
+# ./spec/support/shared_examples/model.rb:222:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Distinct</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Eager Load</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Preload</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">References</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Range</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Subset</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">find_or_create_by</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Create</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#find_or_create_by_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="find_or_create_by_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.find_or_create_by(field => value).send(field)).to eq(value)
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  companies.* FROM companies WHERE companies.name = ? LIMIT 1
+Shared Example Group: "find_or_create_by selector" called from ./spec/models/company_spec.rb:61
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:468:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Find</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">find_or_create_by!</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Create</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#find_or_create_by_2_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="find_or_create_by_2_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.find_or_create_by!(field => value).send(field)).to eq(value)
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  companies.* FROM companies WHERE companies.name = ? LIMIT 1
+Shared Example Group: "find_or_create_by! selector" called from ./spec/models/company_spec.rb:63
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:479:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Find</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">find_or_initialize_by</th>
+              <td colspan="4"></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Initialize</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#find_or_initialize_by_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="find_or_initialize_by_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.find_or_initialize_by(field => value).attributes).to eq(model.new(field => value).attributes)
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.: SELECT  companies.* FROM companies WHERE companies.name = ? LIMIT 1
+Shared Example Group: "find_or_initialize_by selector" called from ./spec/models/company_spec.rb:65
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:490:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 61.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Find</small></th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Select All</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">None relation</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Pluck</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Ids</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Exists?</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#exists_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="exists_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(model.where(field => value).exists?).to eq(true)
+
+ActiveRecord::StatementInvalid:
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 58.: SELECT  1 AS one FROM companies WHERE companies.name = ? LIMIT 1
+Shared Example Group: "exists? selector" called from ./spec/models/company_spec.rb:73
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:530:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 58.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Minimum</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Pessimistic Locking (lock)</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed">
+                <a class="" data-toggle="collapse" href="#pessimistic_locking_derby">
+                  passed
+                </a>
+              </td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#pessimistic_locking_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="pessimistic_locking_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">Lock issue</a>
+                <pre class="prettyprint">
+Failure/Error: locked_item = model.find(item.id).lock!
+
+ActiveRecord::StatementInvalid:
+  ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.: SELECT  companies.* FROM companies WHERE companies.id = ? LIMIT 1
+Shared Example Group: "pessimistic locking" called from ./spec/models/company_spec.rb:79
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:233:in `block in (root)'
+# ./spec/support/shared_examples/model.rb:232:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+             <tr class="collapse" id="pessimistic_locking_derby">
+              <td colspan="5">
+                <pre class="prettyprint">
+Failure/Error: locked_item = model.find(item.id).lock!
+
+ActiveRecord::StatementInvalid:
+ ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: FOR UPDATE is not permitted in this type of statement.  : SELECT COUNT(*) FROM "COMPANIES" WHERE "COMPANIES"."ID" = ? FOR UPDATE
+Shared Example Group: "pessimistic locking" called from ./spec/models/company_spec.rb:79
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:233:in `block in (root)'
+# ./spec/support/shared_examples/model.rb:232:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: FOR UPDATE is not permitted in this type of statement.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+                </pre>
+              </td>
+            </tr>
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Extend Scope</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#extend_scope_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="extend_scope_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>, <a href="#offset_splice">Offset issue</a>
+                <pre class="prettyprint">
+Failure/Error: expect(scope.page(2).to_a).to eq([item_5, item_6])
+
+ActiveRecord::StatementInvalid:
+  ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "4" at line 1, column 42.: SELECT  companies.* FROM companies LIMIT 4 OFFSET 4
+Shared Example Group: "extending scope" called from ./spec/models/company_spec.rb:81
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/support/shared_examples/model.rb:382:in `block in (root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "4" at line 1, column 42.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+                </pre>
+              </td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Average</th>
+              <td class="passed"><span>passed</span></td>
+              <td class="passed"><span>passed</span></td>
+              <td class="fixed-test">
+                <a class="" data-toggle="collapse" href="#average_splice">
+                  fixed
+                </a>
+              </td>
+            </tr>
+
+            <tr class="collapse" id="average_splice">
+              <td colspan="5">
+                <b>Note:</b> <a href="#issues">LIMIT issue</a>
+                <pre class="prettyprint">
+Failure/Error: instance.save!
+
+ActiveRecord::StatementInvalid:
+  ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.: SELECT  companies.* FROM companies WHERE companies.id = ? LIMIT 1
+# arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+# ./spec/factories/factory_splice_fix.rb:5:in `block in /home/aleksandar/splice-jruby/spec/factories/factory_splice_fix.rb'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/evaluation.rb:15:in `create'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/strategy/create.rb:12:in `block in result'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/strategy/create.rb:9:in `result'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/factory.rb:42:in `run'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/factory_runner.rb:23:in `block in run'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/factory_runner.rb:22:in `run'
+# ./.bundle/jruby/2.3.0/gems/factory_girl-4.5.0/lib/factory_girl/strategy_syntax_method_registrar.rb:20:in `block in define_singular_strategy_method'
+# ./spec/models/company_spec.rb:90:in `block in user1'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+# /home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+# ------------------
+# --- Caused by: ---
+# ActiveRecord::JDBCError:
+#   java.sql.SQLSyntaxErrorException: Syntax error: Encountered "LIMIT" at line 1, column 59.
+#   arjdbc/jdbc/RubyJdbcConnection.java:929:in `execute_query'
+
+
+
+                </pre>
+              </td>
+            </tr>
+
+
+
+          </tbody>
+        </table>
+      </div>
+
+      <hr/>
+
+      <h3 id="issues">Issues</h3>
+      <h4>LIMIT issue</h4> <a class="fixed-label" data-toggle="collapse" href="#issue_limit">
+                  Fixed
+                </a>
+      <p class="collapse" id="issue_limit">
+        JDBC adapter for splice reports an error when using LIMIT.
+        <br/>
+        Compared to derby adapter, the LIMIT command is being translated to: FETCH FIRST 1 ROWS ONLY, instead of LIMIT 1
+      </p>
+
+      <h4>OFFSET issue</h4><a class="fixed-label" data-toggle="collapse" href="#issue_offset">
+                  Fixed
+                </a>
+      <p class="collapse" id="issue_offset">
+        JDBC adapter for splice reports an error when using OFFSET.
+        <br/>
+        The OFFSET is being called by the adapter like 'OFFSET 4', instead of 'OFFSET 4 ROWS'
+      </p>
+
+      <h4>ID issue</h4><a class="fixed-label" data-toggle="collapse" href="#issue_id">
+                  Fixed
+                </a>
+      <div class="collapse" id="issue_id">
+      <p>
+        The ID is not properly created. Newly created object returns ID=0 instead of the actual ID.
+        <br/>
+
+        <pre class="prettyprint">
+# /active_record/persistence.rb
+
+def _create_record(attribute_names = self.attribute_names)
+  attributes_values = arel_attributes_with_values_for_create(attribute_names)
+
+  new_id = self.class.unscoped.insert attributes_values
+  self.id ||= new_id if self.class.primary_key
+
+  @new_record = false
+  id
+end
+        </pre>
+
+
+      </p>
+      </div>
+
+      <h4>Has Many and Belongs To issue</h4><a class="fixed-label" data-toggle="collapse" href="#issue_hmabtm">
+                  Fixed
+                </a>
+      <p class="collapse" id="issue_hmabtm">
+        Rails or the adapter doesn't generate SQL which would populate the rows into 'intermediate' table, e.g. "tags_users" with user_id and tag_id
+      </p>
+
+      <h4>FOR UPDATE issue (Both Splice and Derby)</h4><a class="fixed-label" data-toggle="collapse" href="#issue_for_update">
+                  Fixed
+                </a>
+      <p class="collapse" id="issue_for_update">
+        For locking the tables is used command "FOR UPDATE", which is not supported by Derby.
+        <br/>
+        SELECT COUNT(*) FROM "COMPANIES" WHERE "COMPANIES"."ID" = ? FOR UPDATE
+      </p>
+
+      <h4>Selecting all after updating a record</h4><a class="fixed-label" data-toggle="collapse" href="#issue_selecting_all">
+                  Fixed
+                </a>
+      <p class="collapse" id="issue_selecting_all">
+        When selecting all records from database, all records are retreved as expected.
+        <br/>
+        But, once an individual record is updated, selecting all records from a database table that contains the updated record, will return all the records like no previous update was made, even-though when retreving the actual updated record, it will retreve the new updated values.
+        <br/>
+      </p>
+
+      <h4>Extend Scope issue</h4><a class="fixed-label" data-toggle="collapse" href="#issue_extend_scope">
+                  Fixed
+                </a>
+      <div class="collapse" id="issue_extend_scope">
+        When extending the scope, derby generates:
+        <br/>
+        <pre class="prettyprint">
+        SELECT  "COMPANIES".* FROM "COMPANIES" OFFSET 4 ROWS FETCH FIRST 4 ROWS ONLY
+        </pre>
+        For splice it generates:
+        <br/>
+        <pre class="prettyprint">
+        SELECT  companies.* FROM companies FETCH FIRST 4 ROWS ONLY OFFSET 4 ROWS
+        </pre>
+        This is a Rails issue.
+      </div>
+
+            <h4>Circular dependency issue</h4><a class="fixed-label" data-toggle="collapse" href="#issue_circular_dependency">
+                  Not being able to reproduce anymore
+                </a>
+      <div class="collapse" id="issue_circular_dependency">
+        When running a rake task with a number of inputs, an error might occur:
+        <br/>
+        Circular dependency detected while autoloading constant Company
+      </div>
+
+
+
+      <br/>
+      <br/>
+      <hr/>
+      <h3 id="migration_issues">Migration Issues</h3>
+      <h4>rake db:migrate issue</h4><a class="fixed-label" data-toggle="collapse" href="#migration_init">
+                  Fixed
+                </a>
+      <div class="collapse" id="migration_init">
+      SQL command generated by Rails:
+      <br/>
+      CREATE TABLE schema_migrations (version varchar(32672) NOT NULL)
+
+      <pre class="prettyprint">
+          (296.0ms)  CREATE TABLE schema_migrations (version varchar(32672) NOT NULL)
+rake aborted!
+NoMethodError: undefined method `+' for :version:Symbol
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/schema_statements.rb:969:in `block in quoted_columns_for_index'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/schema_statements.rb:969:in `quoted_columns_for_index'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/schema_statements.rb:941:in `add_index_options'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/schema_statements.rb:556:in `add_index'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/schema_migration.rb:32:in `create_table'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/schema_statements.rb:822:in `initialize_schema_migrations_table'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:925:in `initialize'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:823:in `up'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:801:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:137:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/railties/databases.rake:44:in `block in (root)'
+      </pre>
+      </div>
+
+      <h4>CREATE TABLE schema_migrations issue</h4><a class="fixed-label" data-toggle="collapse" href="#migration_create_table">
+                  Fixed
+                </a>
+      <div class="collapse" id="migration_create_table">
+      SQL command generated by Rails when creating database table:
+      <br/>
+      CREATE TABLE companies (id primary_key, name varchar(32672), created_at timestamp NOT NULL, updated_at timestamp NOT NULL)
+
+      <pre class="prettyprint">
+ (36.0ms)  CREATE TABLE companies (id primary_key, name varchar(32672), created_at timestamp NOT NULL, updated_at timestamp NOT NULL)
+rake aborted!
+StandardError: An error has occurred, all later migrations canceled:
+
+ActiveRecord::JDBCError: java.sql.SQLSyntaxErrorException: TYPE 'PRIMARY_KEY' does not exist.: CREATE TABLE companies (id primary_key, name varchar(32672), created_at timestamp NOT NULL, updated_at timestamp NOT NULL) arjdbc/jdbc/RubyJdbcConnection.java:587:in `execute'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/adapter.rb:595:in `_execute'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/adapter.rb:571:in `block in execute'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract_adapter.rb:472:in `block in log'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activesupport-4.2.5.1/lib/active_support/notifications/instrumenter.rb:20:in `instrument'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract_adapter.rb:466:in `log'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/adapter.rb:571:in `execute'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/schema_statements.rb:208:in `create_table'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:665:in `block in method_missing'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:634:in `block in say_with_time'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:634:in `say_with_time'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:654:in `method_missing'
+/home/aleksandar/splice-jruby/db/migrate/20161019100128_create_companies.rb:3:in `change'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:608:in `exec_migration'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:592:in `block in migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:591:in `block in migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:292:in `with_connection'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:590:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:768:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:998:in `block in execute_migration_in_transaction'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:1046:in `ddl_transaction'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:997:in `execute_migration_in_transaction'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:959:in `block in migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:955:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:823:in `up'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/migration.rb:801:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:137:in `migrate'
+/home/aleksandar/splice-jruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/railties/databases.rake:44:in `block in (root)'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor/command.rb:27:in `run'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor/invocation.rb:126:in `invoke_command'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor.rb:359:in `dispatch'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor/base.rb:440:in `block in start'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/bin/jruby_executable_hooks:15:in `<main>'
+
+      </pre>
+      </div>
+
+      <h4>Default value for string</h4><a class="fixed-label" data-toggle="collapse" href="#migration_default">
+                  Fixed
+                </a>
+      <div class="collapse" id="migration_default">
+      when setting a default string in migration like:
+      <pre>
+        t.string :header, default: ''
+      </pre>
+      It sets a default value '' (two single quoutes) in the database, instead of an empty string.
+      </div>
+
+      <h4>Creating indexes freezes the migration</h4><a class="fixed-label" data-toggle="collapse" href="#migration_index">
+                  Partially fixed (Splice Issue)
+                </a>  &nbsp;&nbsp; (by skipping creation of indexes and foreign keys)
+      <div class="collapse" id="migration_index">
+      When adding an index or a foreign key inside a reference it is causing migration to freeze:
+
+      <pre>
+create_join_table :users, :tags do |t|
+  t.index [:user_id, :tag_id]
+  t.index [:tag_id, :user_id]
+end
+      </pre>
+      <pre>
+CREATE UNIQUE INDEX "UNIQUE_SCHEMA_MIGRATIONS" ON "SCHEMA_MIGRATIONS" ("VERSION")
+      </pre>
+
+        It translates to the correct SQL command, but the execution freezes the migration
+      </div>
+
+      <h4>Command rake db:create is not supported</h4><a class="fixed-label" data-toggle="collapse" href="#migration_db_create">
+                  Confirmed. Not supported by Splice nor Derby
+                </a>
+      <div class="collapse" id="migration_db_create">
+      <pre>
+java.sql.SQLNonTransientConnectionException: Connection authentication failure occurred.  Reason: userid or password invalid.
+arjdbc/jdbc/RubyJdbcConnection.java:463:in `init_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/connection.rb:15:in `initialize'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/adapter.rb:76:in `initialize'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/adapter.rb:44:in `new'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/connection_methods.rb:12:in `jdbc_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/jdbc/connection_methods.rb:20:in `embedded_driver'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbcsplice-adapter-0.1.2/lib/arjdbc/splice/connection_methods.rb:18:in `splice_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:438:in `new_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:448:in `checkout_new_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:422:in `acquire_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:349:in `block in checkout'
+/home/aleksandar/.rvm/rubies/jruby-9.1.5.0/lib/ruby/stdlib/monitor.rb:214:in `mon_synchronize'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:348:in `checkout'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:263:in `block in connection'
+/home/aleksandar/.rvm/rubies/jruby-9.1.5.0/lib/ruby/stdlib/monitor.rb:214:in `mon_synchronize'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:262:in `connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_adapters/abstract/connection_pool.rb:571:in `retrieve_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_handling.rb:113:in `retrieve_connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/connection_handling.rb:87:in `connection'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-jdbc-adapter-1.3.21/lib/arjdbc/tasks/derby_database_tasks.rb:9:in `create'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:93:in `create'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:107:in `block in create_current'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:275:in `block in each_current_configuration'
+org/jruby/RubyArray.java:1734:in `each'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:274:in `each_current_configuration'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/tasks/database_tasks.rb:106:in `create_current'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/activerecord-4.2.5.1/lib/active_record/railties/databases.rake:17:in `block in (root)'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/task.rb:240:in `block in execute'
+org/jruby/RubyArray.java:1734:in `each'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/task.rb:235:in `execute'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/task.rb:179:in `block in invoke_with_call_chain'
+/home/aleksandar/.rvm/rubies/jruby-9.1.5.0/lib/ruby/stdlib/monitor.rb:214:in `mon_synchronize'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/task.rb:172:in `invoke_with_call_chain'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/task.rb:165:in `invoke'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:150:in `invoke_task'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:106:in `block in top_level'
+org/jruby/RubyArray.java:1734:in `each'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:106:in `block in top_level'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:115:in `run_with_threads'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:100:in `top_level'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:78:in `block in run'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:176:in `standard_exception_handling'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/lib/rake/application.rb:75:in `run'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/gems/rake-10.5.0/bin/rake:33:in `<main>'
+org/jruby/RubyKernel.java:974:in `load'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/bin/rake:1:in `<main>'
+org/jruby/RubyKernel.java:974:in `load'
+/home/aleksandar/splice-ruby/.bundle/jruby/2.3.0/bin/rake:22:in `(root)'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:1:in `(root)'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:74:in `kernel_load'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli/exec.rb:27:in `run'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:332:in `exec'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor/command.rb:27:in `run'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor/invocation.rb:126:in `invoke_command'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor.rb:359:in `dispatch'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:20:in `dispatch'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/vendor/thor/lib/thor/base.rb:440:in `block in start'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/cli.rb:11:in `start'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/exe/bundle:34:in `<main>'
+org/jruby/RubyKernel.java:974:in `load'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/gems/bundler-1.13.5/lib/bundler/friendly_errors.rb:100:in `<eval>'
+org/jruby/RubyKernel.java:995:in `eval'
+/home/aleksandar/.rvm/gems/jruby-9.1.5.0/bin/jruby_executable_hooks:15:in `<main>'
+Couldn't create database for {"adapter"=>"jdbcsplice", "username"=>"splice", "password"=>"admin", "prepared_statements"=>true, "pool"=>1000, "server_url"=>"localhost:1527", "database"=>"splicedb_test"}
+
+      </pre>
+      <pre>
+CREATE UNIQUE INDEX "UNIQUE_SCHEMA_MIGRATIONS" ON "SCHEMA_MIGRATIONS" ("VERSION")
+      </pre>
+
+        It translates to the correct SQL command, but the execution freezes the migration
+      </div>
+
+      <hr/>
+
+      <h3 id="splice_notes">Splice notes</h3>
+
+      <h4>Creating Indexes</h4><a class="fixed-label" data-toggle="collapse" href="#splice_index_create">
+                  Execution freezes (Skipping in Rails)
+                </a>
+      <div class="collapse" id="splice_index_create">
+      When running a command to create index in sqlshell it freezes and never finishes.
+
+      <pre class="prettyprint">
+CREATE UNIQUE INDEX "UNIQUE_SCHEMA_MIGRATIONS" ON "SCHEMA_MIGRATIONS" ("VERSION")
+      </pre>
+      </div>
+
+      <h4>Creating Foreign Keys</h4><a class="fixed-label" data-toggle="collapse" href="#splice_foreign_key">
+                  Execution freezes (Skipping in Rails)
+                </a>
+      <div class="collapse" id="splice_foreign_key">
+      When running a command to create foreign key in sqlshell it freezes and never finishes.
+
+      <pre class="prettyprint">
+ALTER TABLE "SETTINGS" ADD CONSTRAINT "FK_RAILS_5676777BF1" FOREIGN KEY ("USER_ID") REFERENCES "USERS" ("ID")
+      </pre>
+      </div>
+
+      <h4>Create New Database</h4><a class="fixed-label" data-toggle="collapse" href="#splice_create_new_database">
+                  Currently not supported by Splice
+                </a>
+      <div class="collapse" id="splice_create_new_database">
+      When running a command to create new database in sqlshell:
+
+      <pre class="prettyprint">
+connect 'jdbc:splice://localhost:1527/splicedb_test;create=true;user=splice;password=admin';
+      </pre>
+
+      It reports an error:
+      <pre class="prettyprint">
+ERROR 08004: Connection authentication failure occurred.  Reason: userid or password invalid.
+      </pre>
+
+      <br/><br/>
+      Where the same command when run against Derby database, creates a new database.
+      <br/><br/>
+      For Rails use-case this is important as usually one database is used in development mode, and a different one is used for running tests.
+      </div>
+
+
+      <hr/>
+
+      <h3 id="log_levels">Log Levels</h3>
+      <p> Log levels in Rails are: :debug, :info, :warn, :error, :fatal, and :unknown, corresponding to the log level numbers from 0 up to 5, respectively
+      </p>
+
+      <h3 id="gems">Splice gems for Rails</h3>
+      <pre class="prettyprint" style="overflow-x: hidden !important">
+gem 'activerecord-jdbcsplice-adapter'   (gem which should be included in Rails app)
+gem 'jdbc-splice'                       (used by the gem above)
+      </pre>
+
+      <a href="https://github.com/kolosek/activerecord-jdbcsplice-adapter">activerecord-jdbcsplice-adapter</a><br/>
+      <a href="https://github.com/kolosek/jdbc-splice">jdbc-splice</a>
+      <p>
+      </p>
+
+
+
+      <h3 id="real_world_performance">Real World Performance</h3>
+      <p> Tests are run on puma server with 16 threads and 1 worker. Pool size is 1000 (except for create where the pool size is 10)</p>
+      <p> Testing was done using 10.000 requests (1000 requests per 1000 threads in 10.000 requests ) and taken a mean number</p>
+
+      <p> Each test for JRuby is run up to 10 times (due to JRuby optimization process)</p>
+
+
+      <h2>SPLICE / MYSQL / DERBY</h2>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Action ([#/sec])</th>
+              <th> MySQL <br/><small>Ruby 2.3.1</small> </th>
+              <th> Derby <br/><small>JRuby 9.1.5.0</small> </th>
+              <th> Splice 2<br/><small>JRuby 9.1.5.0</small> </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="text-nowrap" scope="row">Create</th>
+              <td colspan="3">Create (pool:10, thread 10)</td>
+            </tr>
+
+             <tr>
+              <th class="text-nowrap" scope="row"><small>Requests per second</small></th>
+
+              <td>12.72</td>
+              <td>12.67</td>
+              <td>26.01</td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Time taken for tests</small></th>
+
+              <td>785.867 seconds</td>
+              <td>789.497 seconds</td>
+              <td>384.461 seconds</td>
+            </tr>
+
+
+
+
+            <tr>
+              <th class="text-nowrap" scope="row">Update</th>
+              <td colspan="3">
+            </tr>
+
+           <tr>
+              <th class="text-nowrap" scope="row"><small>Requests per second</small></th>
+              <td>12.40</td>
+              <td>279.10</td>
+              <td>300.58</td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Time taken for tests</small></th>
+              <td>806.278 seconds</td>
+              <td>35.830 seconds</td>
+              <td>33.269 seconds</td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Where</th>
+              <td colspan="3">
+            </tr>
+
+           <tr>
+              <th class="text-nowrap" scope="row"><small>Requests per second</small></th>
+              <td>35.465</td>
+              <td>399.07</td>
+              <td>390.25</td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Time taken for tests</small></th>
+              <td>354.655 seconds</td>
+              <td>25.058 seconds</td>
+              <td>25.624 seconds</td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row">Limit</th>
+              <td colspan="3">
+            </tr>
+
+           <tr>
+              <th class="text-nowrap" scope="row"><small>Requests per second</small></th>
+              <td>N/A</td>
+              <td>254.91</td>
+              <td>259.47</td>
+            </tr>
+
+            <tr>
+              <th class="text-nowrap" scope="row"><small>Time taken for tests</small></th>
+              <td>N/A</td>
+              <td>39.229 seconds</td>
+              <td>38.540 seconds</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="performance">Performance</h3>
+      <p> Performance test compared to MySQL and Derby database for supported queries only.</p>
+      <p> Samples run 1000 times each.</p>
+
+
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th> MySQL <br/><small>Ruby 2.3.1</small> </th>
+              <th> Derby <br/><small>JRuby 9.1.5.0</small> </th>
+              <th> Splice <br/><small>JRuby 9.1.5.0</small> </th>
+            </tr>
+          </thead>
+          <tbody>
+<!--             <tr>
+              <th class="text-nowrap" scope="row">Grid behavior</th>
+              <td>Horizontal at all times</td>
+              <td colspan="3">Collapsed to start, horizontal above breakpoints</td>
+            </tr> -->
+            <tr>
+              <th class="text-nowrap" scope="row">Create</th>
+              <td>0.886047</td>
+              <td>6.596056</td>
+              <td>33.390346</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Update</th>
+              <td>6.042646</td>
+              <td>5.787342</td>
+              <td>7.722909</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Where</th>
+              <td>0.349582</td>
+              <td>2.269094</td>
+              <td>20.273895</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Join</th>
+              <td>0.639624</td>
+              <td>3.344357</td>
+              <td>20.823067</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Includes</th>
+              <td>2.156809</td>
+              <td>6.703227</td>
+              <td>36.352042</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group</th>
+              <td>0.312209</td>
+              <td>1.665367</td>
+              <td>5.239833</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group & Having</th>
+              <td>0.285760</td>
+              <td>1.303565</td>
+              <td>5.174444</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Order</th>
+              <td>0.642147</td>
+              <td>1.479684</td>
+              <td>26.210900</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Select</th>
+              <td>0.582684</td>
+              <td>1.012709</td>
+              <td>22.941944</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+
+      <h2>MySQL - RUBY 2.3.1</h2>
+      <p> Samples run 1000 times each.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th> User </th>
+              <th> System </th>
+              <th> Total </th>
+              <th> Real </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
+              <th class="text-nowrap" scope="row">Grid behavior</th>
+              <td>Horizontal at all times</td>
+              <td colspan="3">Collapsed to start, horizontal above breakpoints</td>
+            </tr> -->
+            <tr>
+              <th class="text-nowrap" scope="row">Create</th>
+              <td>0.800000</td>
+              <td>0.020000</td>
+              <td>0.820000</td>
+              <td>0.886047</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Update</th>
+              <td>1.270000</td>
+              <td>0.070000</td>
+              <td>1.340000</td>
+              <td>6.042646</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Where</th>
+              <td>0.330000</td>
+              <td>0.010000</td>
+              <td>0.340000</td>
+              <td>0.349582</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Join</th>
+              <td>0.590000</td>
+              <td>0.030000</td>
+              <td>0.620000</td>
+              <td>0.639624</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Includes</th>
+              <td>0.290000</td>
+              <td>0.010000</td>
+              <td>0.30000</td>
+              <td>0.312209</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group</th>
+              <td>0.290000</td>
+              <td>0.010000</td>
+              <td>0.300000</td>
+              <td>0.312209</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group & Having</th>
+              <td>0.270000</td>
+              <td>0.010000</td>
+              <td>0.280000</td>
+              <td>0.285760</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Order</th>
+              <td>0.580000</td>
+              <td>0.030000</td>
+              <td>0.610000</td>
+              <td>0.642147</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Select</th>
+              <td>0.540000</td>
+              <td>0.020000</td>
+              <td>0.560000</td>
+              <td>0.582684</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+      <h2>SPLICE - JRUBY 9.1.5.0</h2>
+      <p> Samples run 1000 times each.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th> User </th>
+              <th> System </th>
+              <th> Total </th>
+              <th> Real </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="text-nowrap" scope="row">Create</th>
+              <td>24.610000</td>
+              <td>0.270000</td>
+              <td>24.880000</td>
+              <td>33.390346</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Update</th>
+              <td>9.850000</td>
+              <td>0.080000</td>
+              <td>9.930000</td>
+              <td>7.722909</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Where</th>
+              <td>8.310000</td>
+              <td>0.120000</td>
+              <td>8.430000</td>
+              <td>20.273895</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Join</th>
+              <td>6.630000</td>
+              <td>0.100000</td>
+              <td>6.730000</td>
+              <td>20.823067</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Includes</th>
+              <td>26.430000</td>
+              <td>0.180000</td>
+              <td>26.610000</td>
+              <td>36.352042</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group</th>
+              <td>4.950000</td>
+              <td>0.090000</td>
+              <td>5.040000</td>
+              <td>5.239833</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group & Having</th>
+              <td>3.680000</td>
+              <td>0.100000</td>
+              <td>3.780000</td>
+              <td>5.174444</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Order</th>
+              <td>6.370000</td>
+              <td>0.080000</td>
+              <td>6.450000</td>
+              <td>26.210900</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Select</th>
+              <td>5.470000</td>
+              <td>0.060000</td>
+              <td>5.530000</td>
+              <td>22.941944</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+
+
+      </div>
+
+      <h2>Derby - JRUBY 9.1.5.0</h2>
+      <p> Samples run 1000 times each.</p>
+
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Action</th>
+              <th> User </th>
+              <th> System </th>
+              <th> Total </th>
+              <th> Real </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="text-nowrap" scope="row">Create</th>
+              <td>19.840000</td>
+              <td>0.140000</td>
+              <td>19.980000</td>
+              <td>6.596056</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Update</th>
+              <td>11.170000</td>
+              <td>0.070000</td>
+              <td>11.240000</td>
+              <td>5.787342</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Where</th>
+              <td>6.960000</td>
+              <td>0.010000</td>
+              <td>6.970000</td>
+              <td>2.269094</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Join</th>
+              <td>9.190000</td>
+              <td>0.050000</td>
+              <td>9.240000</td>
+              <td>3.344357</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Includes</th>
+              <td>16.660000</td>
+              <td>0.080000</td>
+              <td>16.740000</td>
+              <td>6.703227</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group</th>
+              <td>5.520000</td>
+              <td>0.010000</td>
+              <td>5.530000</td>
+              <td>1.665367</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Group & Having</th>
+              <td>4.060000</td>
+              <td>0.010000</td>
+              <td>4.070000</td>
+              <td>1.303565</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Order</th>
+              <td>3.880000</td>
+              <td>0.000000</td>
+              <td>3.880000</td>
+              <td>1.479684</td>
+            </tr>
+            <tr>
+              <th class="text-nowrap" scope="row">Select</th>
+              <td>2.100000</td>
+              <td>0.010000</td>
+              <td>2.110000</td>
+              <td>1.012709</td>
+            </tr>
+
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+<!--     <div class='docs-error-description'>
+
+    aaaa
+    </div> -->
+  </div>
+
+
+</section>
+<footer>
+  <div class="">
+  </div>
+</footer>
+</div>
+<script src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/prettify/prettify.js"></script>
+<script src="js/layout.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/initialize.js"></script>
+</body>
+</html>
