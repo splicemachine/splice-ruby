@@ -5,7 +5,7 @@ Rails test install on Colo environment (Complete)
 Installation
 
 1. Install git - sudo apt-get install git
-2. Clone the remote repo - git clone https://github.com/kolosek/splice-jruby.git
+2. Clone the remote repo - git clone https://github.com/splicemachine/splice-ruby.git
 3. To install rvm first import GPG signature key  - gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 4. Then install rvm - \curl -sSL https://get.rvm.io | bash
 5. Make rvm default - source /home/splice/.rvm/scripts/rvm
