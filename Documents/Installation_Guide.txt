@@ -1,0 +1,129 @@
+This document explains the method to install Ruby on Rails test bed for benchmark and performance testing in Colo environment.
+ 
+Rails test install on Colo environment (Complete)
+
+Installation
+
+1. Install git - sudo apt-get install git
+2. Clone the remote repo - git clone https://github.com/kolosek/splice-jruby.git
+3. To install rvm first import GPG signature key  - gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+4. Then install rvm - \curl -sSL https://get.rvm.io | bash
+5. Make rvm default - source /home/splice/.rvm/scripts/rvm
+6. Install jruby - rvm install jruby-9.1.5.0
+7. Install Rails - gem install rails -v 4.2.1
+8. Navigate to ~/Documents/splice-jruby
+9. Install Apache Benchmark using the command - sudo apt-get install apache2-utils
+10. Install the bundler - sudo apt-get install bundler
+11. Install nodejs for uglifier dependency - sudo apt-get install nodejs
+12. Run the following command to install all the local gems - bundle install   
+13. Remove the database.yml to include the new one - 
+    - rm config/database.yml
+    - cp config/database_example.yml config/database.yml
+14. Edit the newly created database.yml to have the following parameters 
+15. Change the host from localhost to the desired region server
+
+Setting up the Database
+
+16. Run the command - bundle exec rake db:migrate
+17. This will create all base tables including SCHEMA_MIGRATIONS table in Splice , verify it by logging on to Splice and running show tables.
+
+Create secret key for communication with server
+
+18. Run the command - bundle exec rake secret
+19. Procure the key generated and put it in the .bashrc file as follows 
+20. export SECRET_KEY_BASE=<Key generated above>
+21. Source the bashrc file to take effect.
+
+Run Tests
+
+22. Execute command - bundle exec rspec spec/
+23. 85 tests would run each represented by a dot(.) and final command would be as follows : 85 examples, 0 failures
+24. For benchmark tests it is assumed that there would be at least a record in the Companies table. run the command - bundle exec rails c
+25. In command prompt create a single object line by executing the command - jruby-9.1.5.0 :001 > Company.create(name: 'Company')
+    The result may be as one indicated below :   SQL (26.0ms)  INSERT INTO "COMPANIES" ("NAME", "CREATED_AT", "UPDATED_AT") VALUES (?, ?, ?)  [["name", "Company"], ["created_at", Fri, 25 Nov 2016 17:45:42 UTC +00:00], ["updated_at", Fri, 25 Nov 2016 17:45:42 UTC +00:00]]
+  SQL (26.0ms)  INSERT INTO "COMPANIES" ("NAME", "CREATED_AT", "UPDATED_AT") VALUES (?, ?, ?)  [["name", "Company"], ["created_at", Fri, 25 Nov 2016 17:45:42 UTC +00:00], ["updated_at", Fri, 25 Nov 2016 17:45:42 UTC +00:00]]
+ => #<Company id: 110, name: "Company", created_at: "2016-11-25 17:45:42", updated_at: "2016-11-25 17:45:42", description: ""> 
+26.  Get the company id (In this case 110 ) and keep it with you. It would be used in some tests later.
+27. Type quit and come out of the jruby shell.
+28. Initiate the puma server by executing the command- bundle exec puma -p 3000 -t 16:16 -e production
+29. The above step is going to start the puma server. Keep monitoring this screen for logs.
+
+
+Running Performance Benchmark Tests
+
+
+The performance benchmark tests would be run using Apache Benchmark, the commands are as mentioned below:
+30. Open a fresh terminal session and navigate to your installation of splice-jruby
+31. Run the apache benchmark tests using the command - ab -n 10000 -c 1000 -r http://localhost:3000/benchmarks/method_where?id=110 (110 is procured from step 24) 
+
+The output of the test would be as follows 
+Benchmarking localhost (be patient)
+Completed 1000 requests
+Completed 2000 requests
+Completed 3000 requests
+Completed 4000 requests
+Completed 5000 requests
+Completed 6000 requests
+Completed 7000 requests
+Completed 8000 requests
+Completed 9000 requests
+Completed 10000 requests
+Finished 10000 requests
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            3000
+
+Document Path:          /benchmarks/method_where?id=110
+Document Length:        0 bytes
+
+Concurrency Level:      1000
+Time taken for tests:   27.555 seconds
+Complete requests:      10000
+Failed requests:        0
+Total transferred:      2370000 bytes
+HTML transferred:       0 bytes
+Requests per second:    362.91 [#/sec] (mean)
+Time per request:       2755.512 [ms] (mean)
+Time per request:       2.756 [ms] (mean, across all concurrent requests)
+Transfer rate:          83.99 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0  177 627.4      0    3009
+Processing:   536 2478 1878.5   2243   26547
+Waiting:      533 2469 1878.7   2234   26547
+Total:        735 2655 2146.7   2261   27552
+
+Percentage of the requests served within a certain time (ms)
+  50%   2261
+  66%   2352
+  75%   2452
+  80%   2533
+  90%   2652
+  95%   5136
+  98%   8651
+  99%  12016
+ 100%  27552 (longest request)
+
+32. Next run the following tests : 
+    ab -n 10000 -c 1000 -r http://localhost:3000/benchmarks/method_create
+    ab -n 10000 -c 1000 -r http://localhost:3000/benchmarks/method_update  (Fails)
+    ab -n 10000 -c 1000 -r http://localhost:3000/benchmarks/method_where   (10000 fails)
+    ab -n 10000 -c 1000 -r http://localhost:3000/benchmarks/method_limit 
+33. To run all models (Single inserts into the database) execute the command - bundle exec rake benchmark:models
+(This test takes a while so be patient ~1 hour +)
+
+
+
+
+
+
+
+
+
+
+            
+
+
+
